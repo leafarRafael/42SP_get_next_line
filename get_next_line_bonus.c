@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rbutzke <rbutzke@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 08:36:57 by rbutzke           #+#    #+#             */
-/*   Updated: 2023/11/15 15:25:35 by rbutzke          ###   ########.fr       */
+/*   Updated: 2023/11/19 13:05:53 by rbutzke          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 void	remode_buffer(char *buffer, int index)
 {
@@ -55,7 +55,7 @@ void	cpy_buff_to_lst(char *buffer, t_list **lst, int *is_space)
 
 t_list	*ft_read_files(int fd)
 {
-	static char	buffer[BUFFER_SIZE +1];
+	static char	buffer[FDS][BUFFER_SIZE +1];
 	t_list		*lst;
 	int			bytes_read;
 	int			is_space;
@@ -63,17 +63,17 @@ t_list	*ft_read_files(int fd)
 	is_space = 0;
 	bytes_read = 1;
 	lst = NULL;
-	cpy_buff_to_lst(buffer, &lst, &is_space);
+	cpy_buff_to_lst(buffer[fd], &lst, &is_space);
 	while (bytes_read > 0 && !is_space)
 	{
-		bytes_read = read(fd, buffer, BUFFER_SIZE);
+		bytes_read = read(fd, buffer[fd], BUFFER_SIZE);
 		if (bytes_read == -1)
 		{
 			clear(lst);
 			return (0);
 		}
-		cpy_buff_to_lst(buffer, &lst, &is_space);
-		buffer[bytes_read +1] = '\0';
+		cpy_buff_to_lst(buffer[fd], &lst, &is_space);
+		buffer[fd][bytes_read] = '\0';
 	}
 	return (lst);
 }
